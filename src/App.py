@@ -1,4 +1,5 @@
 import os
+import tools.Router as Route
 
 colors = {
     "W": "\033[0m",  # white (normal)
@@ -20,12 +21,29 @@ def opener():
 
 
 def main_menu():
-    print("\nMain Menu")
+    print(f"\n{colors['B']}Main Menu{colors['W']}")
+    print("""
+    1.) Confirmed Infection Data
+    2.) Mortality Data
+    3.) Recovery Data
+    4.) Exit
+    """)
+
+    main_selector = input("Please Select A Menu Option: ")
+    Route.route_mapper(main_selector)
+
+    if main_selector == "4":
+        return False
+    else:
+        return True
 
 
 def main():
     opener()
-    main_menu()
+    occupied = True
+
+    while occupied:
+        occupied = main_menu()
 
 
 if __name__ == "__main__":
