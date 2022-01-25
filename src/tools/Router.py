@@ -1,6 +1,3 @@
-import sys
-
-import src.App
 from src.App import colors
 from src.data.InfectionData import infections_menu
 from src.data.RecoveryData import recovery_menu
@@ -8,6 +5,7 @@ from src.data.DeathData import deaths_menu
 
 
 def route_mapper(selector):
+
     if selector == "1":
         infection_route()
     elif selector == "2":
@@ -21,15 +19,15 @@ def route_mapper(selector):
 
 
 def infection_route():
-    print("Infection Route")
+    print(f"\n{colors['B']}Infection Route{colors['W']}")
     infections_menu()
 
 
 def mortality_route():
-    print("Mortality Route")
+    print(f"\n{colors['B']}Mortality Route{colors['W']}")
     deaths_menu()
 
 
 def recovery_route():
-    print("Recovery Route")
+    print(f"\n{colors['B']}Recovery Route{colors['W']}")
     recovery_menu()

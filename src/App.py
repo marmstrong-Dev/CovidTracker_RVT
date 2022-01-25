@@ -23,6 +23,7 @@ def opener():
 def main_menu():
     print(f"\n{colors['B']}Main Menu{colors['W']}")
     print("""
+    MAIN>
     1.) Confirmed Infection Data
     2.) Mortality Data
     3.) Recovery Data
