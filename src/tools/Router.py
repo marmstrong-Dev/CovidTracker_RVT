@@ -4,8 +4,8 @@ from src.data.RecoveryData import recovery_menu
 from src.data.DeathData import deaths_menu
 
 
+# Main Router Passes Opts To Sub-Routes
 def route_mapper(selector):
-
     if selector == "1":
         infection_route()
     elif selector == "2":
@@ -18,16 +18,19 @@ def route_mapper(selector):
         print(f"{colors['R']}Invalid Selection. Please Try Again.{colors['W']}")
 
 
+# Sub-Route For Infections Data
 def infection_route():
-    print(f"\n{colors['B']}Infection Route{colors['W']}")
+    print(f"\n{colors['B']}Infection Menu{colors['W']}")
     infections_menu()
 
 
+# Sub-Route For Mortality Data
 def mortality_route():
-    print(f"\n{colors['B']}Mortality Route{colors['W']}")
+    print(f"\n{colors['B']}Mortality Menu{colors['W']}")
     deaths_menu()
 
 
+# Sub-Route For Recovery Data
 def recovery_route():
-    print(f"\n{colors['B']}Recovery Route{colors['W']}")
+    print(f"\n{colors['B']}Recovery Menu{colors['W']}")
     recovery_menu()

@@ -1,6 +1,5 @@
 import pyspark.sql.dataframe
-import src.tools.DbCon
-from src.App import colors
+from src.App import colors, spark
 
 
 # Sub Menu For Mortality Data
@@ -13,7 +12,7 @@ def deaths_menu():
     4.) Return To Main
     """)
 
-    death_selector = input("Please Select An Option: ")
+    death_selector = input("Please Select An Option:")
 
     if death_selector == "1":
         mortality_by_state()
@@ -26,12 +25,15 @@ def deaths_menu():
 
 
 def deaths_by_state():
-    print("Mortality Numbers By State")
+    print("Mortality Numbers By State\n")
+
+    df = spark.read.csv("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv")
+    df.show()
 
 
 def mortality_by_state():
-    print("Mortality Rates By State")
+    print("Mortality Rates By State\n")
 
 
 def average_weekly_deaths():
-    print("US Average Deaths Per Week")
+    print("US Average Deaths Per Week\n")

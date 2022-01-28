@@ -6,6 +6,7 @@ def create_session():
         .config("spark.master", "local")\
         .appName("Covid Tracker")\
         .getOrCreate()
+    con.sparkContext.setLogLevel('ERROR')
 
     return con
 
