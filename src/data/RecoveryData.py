@@ -12,7 +12,7 @@ def recovery_menu():
     4.) Return To Main
     """)
 
-    recovery_selector = input("Please Select An Option:")
+    recovery_selector = input(f"{colors['G']}Please Select A Menu Option:{colors['W']}")
 
     if recovery_selector == "1":
         total_recovery()

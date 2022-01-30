@@ -3,7 +3,7 @@ from src.App import colors, spark
 
 
 # Sub Menu For Mortality Data
-def deaths_menu():
+def mortality_menu():
     print("""
     MAIN> MORTALITY DATA>
     1.) Mortality Percentages By State
@@ -12,10 +12,10 @@ def deaths_menu():
     4.) Return To Main
     """)
 
-    death_selector = input("Please Select An Option:")
+    death_selector = input(f"{colors['G']}Please Select A Menu Option:{colors['W']}")
 
     if death_selector == "1":
-        mortality_by_state()
+        mortality_rates_state()
     elif death_selector == "2":
         deaths_by_state()
     elif death_selector == "3":
@@ -27,11 +27,11 @@ def deaths_menu():
 def deaths_by_state():
     print("Mortality Numbers By State\n")
 
-    df = spark.read.csv("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv")
+    df = spark.con.read.csv("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv")
     df.show()
 
 
-def mortality_by_state():
+def mortality_rates_state():
     print("Mortality Rates By State\n")
 
 

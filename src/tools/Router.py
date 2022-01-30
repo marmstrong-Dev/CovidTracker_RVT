@@ -1,7 +1,7 @@
 from src.App import colors
 from src.data.InfectionData import infections_menu
 from src.data.RecoveryData import recovery_menu
-from src.data.DeathData import deaths_menu
+from src.data.MortalityData import mortality_menu
 
 
 # Main Router Passes Opts To Sub-Routes
@@ -27,7 +27,7 @@ def infection_route():
 # Sub-Route For Mortality Data
 def mortality_route():
     print(f"\n{colors['B']}Mortality Menu{colors['W']}")
-    deaths_menu()
+    mortality_menu()
 
 
 # Sub-Route For Recovery Data

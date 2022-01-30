@@ -1,15 +1,21 @@
-import pyspark
+from pyspark.sql import SparkSession
 
 
-def create_session():
-    con = pyspark.sql.SparkSession.builder\
-        .config("spark.master", "local")\
-        .appName("Covid Tracker")\
-        .getOrCreate()
-    con.sparkContext.setLogLevel('ERROR')
+# Class For Establishing / Closing Spark Session
+class DbCon:
+    def __init__(self):
+        self.con = self.create_session()
 
-    return con
+    @staticmethod
+    def create_session():
+        new_session = SparkSession.builder \
+            .master("local") \
+            .appName("Covid Tracker") \
+            .enableHiveSupport() \
+            .getOrCreate()
+        new_session.sparkContext.setLogLevel('ERROR')
 
+        return new_session
 
-def close_session(session: pyspark.sql.SparkSession):
-    session.stop()
+    def close_session(self):
+        self.con.stop()

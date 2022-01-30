@@ -1,6 +1,6 @@
 import os
 import tools.Router as Route
-from tools.DbCon import create_session, close_session
+from tools.DbCon import DbCon
 from pyspark.sql.session import SparkSession
 
 # Map Of CLI Colors
@@ -12,7 +12,7 @@ colors = {
 }
 
 # Initialize Spark Session
-spark = create_session()
+spark = DbCon()
 
 
 # Welcome Screen
@@ -20,7 +20,7 @@ def opener():
     border = ""
 
     for n in range(0, 15):
-        border = border + "<|>"
+        border = border + f"<{colors['G']}*|*{colors['W']}>"
 
     print(border)
     print(f"\n  {colors['B']}Covid Tracker{colors['W']}  \n")
@@ -38,7 +38,7 @@ def main_menu():
     4.) Exit
     """)
 
-    main_selector = input("Please Select A Menu Option: ")
+    main_selector = input(f"{colors['G']}Please Select A Menu Option:{colors['W']}")
     Route.route_mapper(main_selector)
 
     if main_selector == "4":
@@ -54,7 +54,7 @@ def main():
     while occupied:
         occupied = main_menu()
 
-    close_session(spark)
+    spark.close_session()
 
 
 if __name__ == "__main__":
