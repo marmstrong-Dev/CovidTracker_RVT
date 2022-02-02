@@ -91,6 +91,5 @@ def avg_infections_week_states():
 def avg_infections_week_total():
     print("Average Infections Per Week\n")
 
-    # avg_df = create_table().select(col("1/21/22")).collect()
     avg_df = spark.con.sql("SELECT SUM(Infections) AS US_Total FROM AvgStates").collect()
     print(round((avg_df[0][0] / 731) * 7), 2)

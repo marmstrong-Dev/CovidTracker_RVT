@@ -1,7 +1,5 @@
-import os
 import tools.Router as Route
 from tools.DbCon import DbCon
-from pyspark.sql.session import SparkSession
 
 # Map Of CLI Colors
 colors = {
