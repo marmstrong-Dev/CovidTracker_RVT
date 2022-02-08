@@ -1,6 +1,7 @@
 import pyspark.sql.dataframe
 from pyspark.sql.functions import col
-from src.App import colors, spark
+from src.tools.Router import spark
+from src.tools.Colors import Colors
 
 
 # Sub Menu For Recovery Data
@@ -13,18 +14,18 @@ def recovery_menu():
     4.) Return To Main
     """)
 
-    recovery_selector = input(f"{colors['G']}Please Select A Menu Option:{colors['W']}")
+    recovery_selector = input(f"{Colors.g}Please Select A Menu Option:{Colors.w}")
 
     if recovery_selector == "1":
         total_recovery()
     elif recovery_selector == "2":
         recovery_by_state()
     else:
-        print(f"{colors['R']}Invalid Selection. Please Try Again{colors['W']}")
+        print(f"{Colors.r}Invalid Selection. Please Try Again{Colors.w}")
 
 
 def create_table():
-    print("Creating Infections Table")
+    print("Creating Recovery Table")
     df_i = spark.con.read.format("csv") \
         .option("header", "true") \
         .option("inferSchema", "true") \
@@ -53,11 +54,28 @@ def total_recovery():
     print("Total US Recovery\n")
     create_table()
 
-    spark.con.sql("SELECT (SUM(1_21_22_i) - SUM(1_21_22_d)) AS Recovered FROM RecoveryInfo").show()
+    spark.con.sql("""
+        SELECT (SUM(1_21_22_i) - SUM(1_21_22_d)) AS NumRecovered,
+        ROUND((1 - SUM(1_21_22_d) / SUM(1_21_22_i)) * 100, 2) AS PercentRecovered
+        FROM RecoveryInfo""").show()
+
+    input("Enter Any Key To Return")
+    spark.con.catalog.dropTempView("RecoveryInfo")
 
 
 def recovery_by_state():
     print("Recovery By State\n")
+    create_table()
+
+    spark.con.sql("""
+        SELECT State_d, (SUM(1_21_22_i) - SUM(1_21_22_d)) AS NumRecovered,
+        ROUND((1 - SUM(1_21_22_d) / SUM(1_21_22_i)) * 100, 2) AS PercentRecovered
+        FROM RecoveryInfo 
+        WHERE State_d NOT LIKE('%Princess%')
+        GROUP BY State_d ORDER BY PercentRecovered DESC""").show(100, False)
+
+    input("Enter Any Key To Return")
+    spark.con.catalog.dropTempView("RecoveryInfo")
 
 
 def vaccination_rate():
