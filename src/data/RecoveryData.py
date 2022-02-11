@@ -1,7 +1,8 @@
-import pyspark.sql.dataframe
 from pyspark.sql.functions import col
-from src.tools.Router import spark
+from src.tools.DbCon import DbCon
 from src.tools.Colors import Colors
+
+spark = DbCon()
 
 
 # Sub Menu For Recovery Data
@@ -14,16 +15,19 @@ def recovery_menu():
     4.) Return To Main
     """)
 
-    recovery_selector = input(f"{Colors.g}Please Select A Menu Option:{Colors.w}")
+    recovery_selector = input(f"{Colors.g.value}Please Select A Menu Option:{Colors.w.value}")
 
     if recovery_selector == "1":
         total_recovery()
     elif recovery_selector == "2":
         recovery_by_state()
+    elif recovery_selector == "3":
+        vaccination_rate()
     else:
-        print(f"{Colors.r}Invalid Selection. Please Try Again{Colors.w}")
+        print(f"{Colors.r}Invalid Selection. Please Try Again{Colors.w.value}")
 
 
+# Create And Return Recovery DataFrame
 def create_table():
     print("Creating Recovery Table")
     df_i = spark.con.read.format("csv") \
@@ -50,6 +54,7 @@ def create_table():
     return df
 
 
+# Print Total Recovered Covid-19 Patients
 def total_recovery():
     print("Total US Recovery\n")
     create_table()
@@ -63,6 +68,7 @@ def total_recovery():
     spark.con.catalog.dropTempView("RecoveryInfo")
 
 
+# Print Number of Recovered Patients By State
 def recovery_by_state():
     print("Recovery By State\n")
     create_table()
@@ -78,5 +84,22 @@ def recovery_by_state():
     spark.con.catalog.dropTempView("RecoveryInfo")
 
 
+# Print Total Vaccinations and Weekly Rates
 def vaccination_rate():
     print("Vaccination Rates\n")
+    spark.con.read.format("csv") \
+        .option("header", "true") \
+        .option("inferSchema", "true") \
+        .load("datasets/csse_covid_19_data/country_vaccinations.csv") \
+        .select(col("country"), col("date"), col("people_fully_vaccinated")) \
+        .where(col("country").startswith("United States")) \
+        .createOrReplaceTempView("Vaccinations_Group")
+
+    spark.con.sql("""
+    SELECT CAST(MAX(people_fully_vaccinated) AS BIGINT) AS TotalVaccinated,
+    (MAX(people_fully_vaccinated) / COUNT(people_fully_vaccinated)) * 7 AS VaccinesPerWeek
+    FROM Vaccinations_Group
+    """).show(5, False)
+
+    input("Enter Any Key To Return")
+    spark.con.catalog.dropTempView("TotalVaccinated")

@@ -1,6 +1,8 @@
 from pyspark.sql.functions import col
-from src.tools.Router import spark
+from src.tools.DbCon import DbCon
 from src.tools.Colors import Colors
+
+spark = DbCon()
 
 
 # Sub Menu For Mortality Data
@@ -13,7 +15,7 @@ def mortality_menu():
     4.) Return To Main
     """)
 
-    death_selector = input(f"{Colors.g}Please Select A Menu Option:{Colors.w}")
+    death_selector = input(f"{Colors.g.value}Please Select A Menu Option:{Colors.w.value}")
 
     if death_selector == "1":
         mortality_rates_state()
@@ -22,9 +24,10 @@ def mortality_menu():
     elif death_selector == "3":
         average_weekly_deaths()
     else:
-        print(f"{Colors.r}Invalid Selection. Please Try Again{Colors.w}")
+        print(f"{Colors.r.value}Invalid Selection. Please Try Again{Colors.w.value}")
 
 
+# Create And Return DataFrame For Mortality Data
 def create_table():
     print("Creating Mortality Table")
 
@@ -40,6 +43,7 @@ def create_table():
         return None
 
 
+# Print Overall Mortality By State
 def deaths_by_state():
     print("Mortality Numbers By State\n")
 
@@ -55,9 +59,11 @@ def deaths_by_state():
         GROUP BY Province_State
         ORDER BY Infections DESC""").show(100, False)
 
+    input("Enter Any Key To Return")
     spark.con.catalog.dropTempView("MortalityList")
 
 
+# Print Mortality Count By State
 def mortality_rates_state():
     print("Mortality Rates By State\n")
 
@@ -81,10 +87,12 @@ def mortality_rates_state():
         GROUP BY DeathList.Province_State
         ORDER BY MortalityRate DESC""").show(100, False)
 
+    input("Enter Any Key To Return")
     spark.con.catalog.dropTempView("DeathList")
     spark.con.catalog.dropTempView("InfectionList")
 
 
+# Print Average Weekly Deaths Per State
 def average_weekly_deaths():
     print("US Average Deaths Per Week\n")
     create_table() \
@@ -92,9 +100,14 @@ def average_weekly_deaths():
         .withColumnRenamed("1/21/22", "1_21_22") \
         .createOrReplaceTempView("AvgList")
 
+    spark.con.sql("SELECT ROUND((SUM(1_21_22) / 731) * 7, 2) AS TotalWeeklyDeaths FROM AvgList").show(5, False)
     spark.con.sql("""
-        SELECT Province_State, ROUND((SUM(1_21_22) / 731) * 7, 2) AS WeeklyInfections
+        SELECT Province_State, ROUND((SUM(1_21_22) / 731) * 7, 2) AS WeeklyDeaths
         FROM AvgList
         WHERE Province_State NOT LIKE("%Princess%")
         GROUP BY Province_State
         ORDER BY WeeklyInfections DESC""").show(100, False)
+
+    input("Enter Any Key To Return")
+    spark.con.catalog.dropTempView("AvgList")
+

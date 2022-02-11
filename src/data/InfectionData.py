@@ -1,7 +1,8 @@
 from pyspark.sql.functions import col
-from pyspark.sql import DataFrame
-from src.tools.Router import spark
+from src.tools.DbCon import DbCon
 from src.tools.Colors import Colors
+
+spark = DbCon()
 
 
 # Sub Menu For Infections Data
@@ -14,7 +15,7 @@ def infections_menu():
     4.) Return To Main
     """)
 
-    mortality_selector = input(f"{Colors.g}Please Select A Menu Option:{Colors.w}")
+    mortality_selector = input(f"{Colors.g.value}Please Select A Menu Option:{Colors.w.value}")
 
     if mortality_selector == "1":
         highest_infections_states()
@@ -25,7 +26,7 @@ def infections_menu():
     elif mortality_selector == "4":
         print("Returning To Main")
     else:
-        print(f"{Colors.r}Invalid Selection. Please Try Again{Colors.w}")
+        print(f"{Colors.r.value}Invalid Selection. Please Try Again{Colors.w.value}")
 
 
 def create_table():

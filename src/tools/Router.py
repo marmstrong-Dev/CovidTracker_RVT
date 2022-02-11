@@ -4,8 +4,8 @@ from src.data.MortalityData import mortality_menu
 from src.tools.Colors import Colors
 from src.tools.DbCon import DbCon
 
+
 # Initialize Spark Session
-spark = DbCon()
 
 
 # Main Router Passes Opts To Sub-Routes
@@ -18,24 +18,24 @@ def route_mapper(selector):
         recovery_route()
     elif selector == "4":
         print("Goodbye")
-        spark.close_session()
+        # spark.close_session()
     else:
-        print(f"{Colors.r}Invalid Selection. Please Try Again.{Colors.w}")
+        print(f"{Colors.r.value}Invalid Selection. Please Try Again.{Colors.w.value}")
 
 
 # Sub-Route For Infections Data
 def infection_route():
-    print(f"\n{Colors.b}Infection Menu{Colors.w}")
+    print(f"\n{Colors.b.value}Infection Menu{Colors.w.value}")
     infections_menu()
 
 
 # Sub-Route For Mortality Data
 def mortality_route():
-    print(f"\n{Colors.b}Mortality Menu{Colors.w}")
+    print(f"\n{Colors.b.value}Mortality Menu{Colors.w.value}")
     mortality_menu()
 
 
 # Sub-Route For Recovery Data
 def recovery_route():
-    print(f"\n{Colors.b}Recovery Menu{Colors.w}")
+    print(f"\n{Colors.b.value}Recovery Menu{Colors.w.value}")
     recovery_menu()
