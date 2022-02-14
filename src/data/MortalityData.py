@@ -110,4 +110,3 @@ def average_weekly_deaths():
 
     input("Enter Any Key To Return")
     spark.con.catalog.dropTempView("AvgList")
-

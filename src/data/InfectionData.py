@@ -44,12 +44,12 @@ def highest_infections_states():
     print("Highest Infections By State\n")
 
     infections_states_df = create_table()\
-        .select(col("Admin2"), col("Province_State"), col("5/29/21"))\
-        .withColumnRenamed("5/29/21", "05_29_2021_I")
+        .select(col("Admin2"), col("Province_State"), col("1/21/22"))\
+        .withColumnRenamed("1/21/22", "01_21_2022_I")
 
     infections_states_df.createOrReplaceTempView("StatesRanked")
     spark.con.sql("""
-    SELECT Province_State AS States, SUM(05_29_2021_I) AS Infections
+    SELECT Province_State AS States, SUM(01_21_2022_I) AS Infections
     FROM StatesRanked
     WHERE Province_State NOT LIKE("%Princess%")
     GROUP BY Province_State ORDER BY Infections DESC
