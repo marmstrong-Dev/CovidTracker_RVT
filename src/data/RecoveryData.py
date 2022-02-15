@@ -30,28 +30,33 @@ def recovery_menu():
 # Create And Return Recovery DataFrame
 def create_table():
     print("Creating Recovery Table")
-    df_i = spark.con.read.format("csv") \
-        .option("header", "true") \
-        .option("inferSchema", "true") \
-        .load("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv") \
-        .select(col("UID"), col("Admin2"), col("Province_State"), col("1/21/22")) \
-        .withColumnRenamed("UID", "id_i") \
-        .withColumnRenamed("Admin2", "City_i") \
-        .withColumnRenamed("Province_State", "State_i") \
-        .withColumnRenamed("1/21/22", "1_21_22_i")
 
-    df_d = spark.con.read.format("csv") \
-        .option("header", "true") \
-        .option("inferSchema", "true") \
-        .load("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv") \
-        .select(col("UID"), col("Admin2"), col("Province_State"), col("1/21/22")) \
-        .withColumnRenamed("UID", "id_d") \
-        .withColumnRenamed("Admin2", "City_d") \
-        .withColumnRenamed("Province_State", "State_d") \
-        .withColumnRenamed("1/21/22", "1_21_22_d")
+    try:
+        df_i = spark.con.read.format("csv") \
+            .option("header", "true") \
+            .option("inferSchema", "true") \
+            .load("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv") \
+            .select(col("UID"), col("Admin2"), col("Province_State"), col("1/21/22")) \
+            .withColumnRenamed("UID", "id_i") \
+            .withColumnRenamed("Admin2", "City_i") \
+            .withColumnRenamed("Province_State", "State_i") \
+            .withColumnRenamed("1/21/22", "1_21_22_i")
 
-    df = df_i.join(df_d, col("id_i") == col("id_d"), "inner").createOrReplaceTempView("RecoveryInfo")
-    return df
+        df_d = spark.con.read.format("csv") \
+            .option("header", "true") \
+            .option("inferSchema", "true") \
+            .load("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv") \
+            .select(col("UID"), col("Admin2"), col("Province_State"), col("1/21/22")) \
+            .withColumnRenamed("UID", "id_d") \
+            .withColumnRenamed("Admin2", "City_d") \
+            .withColumnRenamed("Province_State", "State_d") \
+            .withColumnRenamed("1/21/22", "1_21_22_d")
+
+        df = df_i.join(df_d, col("id_i") == col("id_d"), "inner").createOrReplaceTempView("RecoveryInfo")
+        return df
+    except:
+        print("File Not Found")
+        return None
 
 
 # Print Total Recovered Covid-19 Patients
@@ -97,9 +102,30 @@ def vaccination_rate():
 
     spark.con.sql("""
     SELECT CAST(MAX(people_fully_vaccinated) AS BIGINT) AS TotalVaccinated,
-    (MAX(people_fully_vaccinated) / COUNT(people_fully_vaccinated)) * 7 AS VaccinesPerWeek
+    ROUND((MAX(people_fully_vaccinated) / COUNT(people_fully_vaccinated)), 2) * 7 AS VaccinesPerWeek
     FROM Vaccinations_Group
     """).show(5, False)
 
-    input("Enter Any Key To Return")
     spark.con.catalog.dropTempView("TotalVaccinated")
+    vaccinations_by_vendor()
+
+
+def vaccinations_by_vendor():
+    print("Vaccinations By Vendor\n")
+
+    spark.con.read.format("csv") \
+        .option("header", "true") \
+        .option("inferSchema", "true") \
+        .load("datasets/csse_covid_19_data/country_vaccinations_by_manufacturer.csv") \
+        .select(col("location"), col("vaccine"), col("total_vaccinations")) \
+        .where(col("location").startswith("United States")) \
+        .createOrReplaceTempView("VendorView")
+
+    spark.con.sql("""
+    SELECT vaccine, MAX(total_vaccinations) AS total_shots
+    FROM VendorView
+    GROUP BY vaccine
+    """).show(20, False)
+
+    input("Enter Any Key To Return")
+    spark.con.catalog.dropTempView("VendorView")

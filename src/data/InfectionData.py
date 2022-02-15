@@ -32,12 +32,16 @@ def infections_menu():
 def create_table():
     print("Creating Infections Table")
 
-    df = spark.con.read.format("csv") \
-        .option("header", "true") \
-        .option("inferSchema", "true") \
-        .load("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv")
+    try:
+        df = spark.con.read.format("csv") \
+            .option("header", "true") \
+            .option("inferSchema", "true") \
+            .load("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv")
 
-    return df
+        return df
+    except:
+        print("File Not Found")
+        return None
 
 
 def highest_infections_states():
