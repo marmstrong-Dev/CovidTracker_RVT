@@ -2,10 +2,6 @@ from src.data.InfectionData import infections_menu
 from src.data.RecoveryData import recovery_menu
 from src.data.MortalityData import mortality_menu
 from src.tools.Colors import Colors
-from src.tools.DbCon import DbCon
-
-
-# Initialize Spark Session
 
 
 # Main Router Passes Opts To Sub-Routes
@@ -18,7 +14,6 @@ def route_mapper(selector):
         recovery_route()
     elif selector == "4":
         print("Goodbye")
-        # spark.close_session()
     else:
         print(f"{Colors.r.value}Invalid Selection. Please Try Again.{Colors.w.value}")
 

@@ -23,6 +23,8 @@ def mortality_menu():
         deaths_by_state()
     elif death_selector == "3":
         average_weekly_deaths()
+    elif death_selector == "4":
+        print("Returning To Main")
     else:
         print(f"{Colors.r.value}Invalid Selection. Please Try Again{Colors.w.value}")
 
@@ -106,7 +108,7 @@ def average_weekly_deaths():
         FROM AvgList
         WHERE Province_State NOT LIKE("%Princess%")
         GROUP BY Province_State
-        ORDER BY WeeklyInfections DESC""").show(100, False)
+        ORDER BY WeeklyDeaths DESC""").show(100, False)
 
     input("Enter Any Key To Return")
     spark.con.catalog.dropTempView("AvgList")

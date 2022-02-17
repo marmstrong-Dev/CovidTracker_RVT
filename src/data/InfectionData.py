@@ -29,6 +29,7 @@ def infections_menu():
         print(f"{Colors.r.value}Invalid Selection. Please Try Again{Colors.w.value}")
 
 
+# Create Initial DataFrame For Querying
 def create_table():
     print("Creating Infections Table")
 
@@ -44,6 +45,7 @@ def create_table():
         return None
 
 
+# Pull Highest Infections Numbers Per State
 def highest_infections_states():
     print("Highest Infections By State\n")
 
@@ -62,6 +64,7 @@ def highest_infections_states():
     input("Enter Any Key To Return")
 
 
+# Pull Overall US Infections
 def total_infections():
     print("Total US Infections\n")
 
@@ -70,10 +73,12 @@ def total_infections():
     for n in overall_df:
         total += n[0]
 
-    print(total)
+    print(f"\n{Colors.b.value}Total Infections To Date: {Colors.w.value}")
+    print("{:,}".format(total))
     input("\nEnter Any Key To Return")
 
 
+# Pull Average Weekly Infections Per State
 def avg_infections_week_states():
     print("Average Infections By State\n")
 
@@ -94,6 +99,7 @@ def avg_infections_week_states():
     input("Enter Any Key To Return")
 
 
+# Pull Average Weekly Infections For Whole USA
 def avg_infections_week_total():
     print("Average Infections Per Week\n")
 

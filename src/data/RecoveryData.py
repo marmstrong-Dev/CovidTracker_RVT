@@ -23,6 +23,8 @@ def recovery_menu():
         recovery_by_state()
     elif recovery_selector == "3":
         vaccination_rate()
+    elif recovery_selector == "4":
+        print("Returning To Main")
     else:
         print(f"{Colors.r}Invalid Selection. Please Try Again{Colors.w.value}")
 
