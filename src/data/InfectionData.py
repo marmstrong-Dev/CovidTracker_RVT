@@ -37,7 +37,7 @@ def create_table():
         df = spark.con.read.format("csv") \
             .option("header", "true") \
             .option("inferSchema", "true") \
-            .load("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv")
+            .load("hdfs://localhost:9000/user/narma/covid/data/time_series_covid19_confirmed_US.csv")
 
         return df
     except:
@@ -76,6 +76,8 @@ def total_infections():
     print(f"\n{Colors.b.value}Total Infections To Date: {Colors.w.value}")
     print("{:,}".format(total))
     input("\nEnter Any Key To Return")
+
+    return total
 
 
 # Pull Average Weekly Infections Per State

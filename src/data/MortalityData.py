@@ -37,7 +37,7 @@ def create_table():
         df = spark.con.read.format("csv") \
             .option("header", "true") \
             .option("inferSchema", "true") \
-            .load("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv")
+            .load("hdfs://localhost:9000/user/narma/covid/data/time_series_covid19_deaths_US.csv")
 
         return df
     except:

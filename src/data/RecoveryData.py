@@ -37,7 +37,7 @@ def create_table():
         df_i = spark.con.read.format("csv") \
             .option("header", "true") \
             .option("inferSchema", "true") \
-            .load("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv") \
+            .load("hdfs://localhost:9000/user/narma/covid/data/time_series_covid19_confirmed_US.csv") \
             .select(col("UID"), col("Admin2"), col("Province_State"), col("1/21/22")) \
             .withColumnRenamed("UID", "id_i") \
             .withColumnRenamed("Admin2", "City_i") \
@@ -47,7 +47,7 @@ def create_table():
         df_d = spark.con.read.format("csv") \
             .option("header", "true") \
             .option("inferSchema", "true") \
-            .load("datasets/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv") \
+            .load("hdfs://localhost:9000/user/narma/covid/data/time_series_covid19_deaths_US.csv") \
             .select(col("UID"), col("Admin2"), col("Province_State"), col("1/21/22")) \
             .withColumnRenamed("UID", "id_d") \
             .withColumnRenamed("Admin2", "City_d") \
@@ -97,7 +97,7 @@ def vaccination_rate():
     spark.con.read.format("csv") \
         .option("header", "true") \
         .option("inferSchema", "true") \
-        .load("datasets/csse_covid_19_data/country_vaccinations.csv") \
+        .load("hdfs://localhost:9000/user/narma/covid/data/country_vaccinations.csv") \
         .select(col("country"), col("date"), col("people_fully_vaccinated")) \
         .where(col("country").startswith("United States")) \
         .createOrReplaceTempView("Vaccinations_Group")
@@ -118,7 +118,7 @@ def vaccinations_by_vendor():
     spark.con.read.format("csv") \
         .option("header", "true") \
         .option("inferSchema", "true") \
-        .load("datasets/csse_covid_19_data/country_vaccinations_by_manufacturer.csv") \
+        .load("hdfs://localhost:9000/user/narma/covid/data/country_vaccinations_by_manufacturer.csv") \
         .select(col("location"), col("vaccine"), col("total_vaccinations")) \
         .where(col("location").startswith("United States")) \
         .createOrReplaceTempView("VendorView")
